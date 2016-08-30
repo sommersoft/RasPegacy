@@ -19,5 +19,5 @@ Another Boring, RPi Car Data Display... Designed for use with 05-09 Subaru Legac
 
 # External Python Modules Used
 1. Adafruit BMP085: https://github.com/adafruit/Adafruit_Python_BMP
-2. Brendan-w's for of pyOBD: https://github.com/brendan-w/python-OBD
+2. Brendan-w's fork of pyOBD: https://github.com/brendan-w/python-OBD
 3. Matt Dyson's LIS3DH (see Issue #4): https://github.com/mattdy/python-lis3dh
