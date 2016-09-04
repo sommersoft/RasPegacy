@@ -8,7 +8,7 @@ Another Boring, RPi Car Data Display... Designed for use with 05-09 Subaru Legac
 4. Microchip ADC (MCP3208)
 5. Honeywell PX2 Series Pressure Transducer (PX2AN1XX100PSACX)
 6. Adafruit 3-Axis Accelerometer Breakout (LIS3DH)
-7. ScanTool OSC Link SX (USB type OBD-II reader)
+7. ScanTool OBDLink SX (USB type OBD-II reader)
 
 # Software System Components (as designed)
 1. Raspbian OS
