@@ -80,9 +80,10 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
     #print time.strftime("menu/clock/clk:%H:%M")
 
     #send the interior temperature
-    clocktemp = 'menu/clock/tmp:' + temperature
-    clocktempf = clocktemp
-    send(clocktempf)
+    if temperature:
+        clocktemp = 'menu/clock/tmp:' + temperature
+        clocktempf = clocktemp
+        send(clocktempf)
     
     #send the current status message
     sbar_msg = 'status_bar/sbar/msg:' + result
