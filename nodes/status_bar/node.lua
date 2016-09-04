@@ -3,7 +3,7 @@
 
 gl.setup(720, 40)
 
-node.alias("statu_bar")
+node.alias("status_bar")
 
 -- good place to display Raspberry Pi and/or Subaru logo(s)
 --title = resource.load_image("title.png")
