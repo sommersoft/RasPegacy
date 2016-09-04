@@ -9,8 +9,9 @@ import RPi.GPIO as GPIO
 import socket, random, json, time, spidev, subprocess, sys#, obd
 import Adafruit_BMP.BMP085 as BMP085
 from multiprocessing import Process
-global result
 
+global result # status bar message
+result = "Initializing Display & Sensor Array..."
 
 #Setup sock for UPD updates
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -82,6 +83,10 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
     clocktemp = 'menu/clock/tmp:' + temperature
     clocktempf = clocktemp
     send(clocktempf)
+    
+    #send the current status message
+    sbar_msg = 'status_bar/sbar/msg:' + result
+    send(sbar_msg)
 
     #check which view we're using, so we know how to "send" the data
     with open('/home/pi/RasPegacy/nodes/view.json') as data_file: #, encoding='utf-8') as data_file:
