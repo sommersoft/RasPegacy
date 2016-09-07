@@ -22,7 +22,7 @@ BMPsensor = BMP085.BMP085(mode=BMP085.BMP085_HIGHRES)
 #Setup spidev to talk to MCP3208
 spi = spidev.SpiDev()
 spi.open(0,0)
-spi.max_speed_hz = 20000  #MCP3208 datasheet states to maintain at least 10kHz sample rate
+spi.max_speed_hz = 1000000  #MCP3208 datasheet states to maintain at least 10kHz sample rate
 spi.mode = 0b01
 spi.bits_per_word = 8
 
@@ -167,8 +167,8 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
 ##doesn't interfere with values being sent.
 def Sense():
     import obd
-    connection = obd.OBD()
-
+    obdII = obd.OBD()
+    cmd = obd.commands.INTAKE_PRESSURE
     try:
         for i in range(3000):
         #Read BMP180 (i2c)
@@ -208,8 +208,8 @@ def Sense():
             #example: boost = -5.06, baro = 14.7 || [-5.06 - -14.7](9.64) / [20 - -14.7](34.7) = 0.277 (0.28)
             #info-beamer glRotate would look like this: (-135 + 271 * 0.28) = 38.08
 
-            #boost = read.OBDII
-            boost = random.randrange(-11, 17)
+            boost = obdII.query(cmd)
+            #boost = random.randrange(-11, 17)
             boost_pre = (boost - (baro * -1)) / (20 - (baro * -1))
             #print "boost_pre:(", boost," - ", (baro * -1), " / 20 - ", (baro * -1), " = ", format(boost_pre, '.2f')
             boost_needle = format(boost_pre, '.2f')
