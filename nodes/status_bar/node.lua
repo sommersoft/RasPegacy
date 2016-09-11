@@ -24,7 +24,7 @@ function node.render()
     --end
 
     -- Draw logo(s)
-    RPi:draw(685, 2, 31, 48, 1)
+    RPi:draw(685, 2, WIDTH, HEIGHT, 1)
 
     -- Write status message
     font:write(10, 2, msg, 18, 1, 1, 1, 1)
