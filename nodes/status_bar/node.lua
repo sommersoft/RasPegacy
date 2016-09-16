@@ -7,7 +7,7 @@ node.alias("status_bar")
 
 -- good place to display Raspberry Pi and/or Subaru logo(s)
 RPi = resource.load_image("RPi_small.png")
-Subaru = resource.load_imange("Subaru Logo.png")
+Subaru = resource.load_imange("Subaru_Logo.png")
 
 util.data_mapper{
     ["sbar/msg"] = function(new_msg)
