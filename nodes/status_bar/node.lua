@@ -7,6 +7,7 @@ node.alias("status_bar")
 
 -- good place to display Raspberry Pi and/or Subaru logo(s)
 RPi = resource.load_image("RPi_small.png")
+Subaru = resource.load_imange("Subaru Logo.png")
 
 util.data_mapper{
     ["sbar/msg"] = function(new_msg)
@@ -25,6 +26,7 @@ function node.render()
 
     -- Draw logo(s)
     RPi:draw(681, 1, 719, 41, 1)
+    Subaru:draw(610, 1, 678, 39, 1)
 
     -- Write status message
     font:write(10, 2, msg, 18, 1, 1, 1, 1)
