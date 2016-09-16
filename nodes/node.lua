@@ -26,7 +26,7 @@ function node.render()
     
     -- Render the status bar area
     local sbar = resource.render_child("status_bar")
-    sbar:draw(0,446,720,40)
+    sbar:draw(0, 446, 720, 486)
     sbar:dispose()
     
     -- Select which view the user has selected then render that child
