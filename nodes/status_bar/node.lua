@@ -1,5 +1,6 @@
 --RasPegacy v0.1
 --Status Bar Child
+--Git is painful...
 
 gl.setup(720, 40)
 
