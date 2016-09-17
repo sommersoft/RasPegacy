@@ -7,6 +7,7 @@ gl.setup(720, 40)
 node.alias("status_bar")
 
 -- good place to display Raspberry Pi and/or Subaru logo(s)
+bg = resource.load_image("bg_bottom.png")
 RPi = resource.load_image("RPi_small.png")
 Subaru = resource.load_image("Subaru_Logo.png")
 
@@ -19,15 +20,16 @@ util.data_mapper{
 
 
 function node.render()
-    gl.clear(0.23, 0.24, 0.26, 0.6)
+    gl.clear(0, 0, 0, 1)
     -- If I implement time based color swapping, will need to pass time here as well
     --if tonumber(clk) < 2000 then
     --    gl.clear(0, 0, 0, 0)
     --end
 
-    -- Draw logo(s)
-    RPi:draw(681, 1, 719, 41, 1)
-    Subaru:draw(610, 1, 678, 39, 1)
+    -- Draw background and logo(s)
+    bg:draw(0, 0, 720, 40, 1)
+    RPi:draw(681, 1, 719, 39, 1)
+    Subaru:draw(608, 1, 676, 39, 1)
 
     -- Write status message
     font:write(10, 2, msg, 18, 1, 1, 1, 1)
