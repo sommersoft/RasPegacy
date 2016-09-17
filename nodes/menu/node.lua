@@ -5,7 +5,7 @@ gl.setup(720, 40)
 
 node.alias("menu")
 
-bg = resourse.load_image("bg_top.png")
+bg = resource.load_image("bg_top.png")
 title = resource.load_image("title.png")
 
 local json = require "json"
