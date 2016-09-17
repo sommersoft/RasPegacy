@@ -8,7 +8,7 @@ connection = obd.OBD('/dev/ttyUSB0', 115200) # auto-connects to USB or RF port
 
 #response = connection.query_multi(False, obd.commands.SPEED, obd.commands.RPM) # send the command, and parse the response
 #response = connection.query_multi(cmd) # send the command, and parse the response
-rpm, speed, intake = o.query_multi(obd.commands.RPM, obd.commands.SPEED, obd.commands.INTAKE_PRESSURE)
+rpm, speed, intake = connection.query_multi(obd.commands.RPM, obd.commands.SPEED, obd.commands.INTAKE_PRESSURE)
 
 print(rpm.value)
 print(speed.value)
