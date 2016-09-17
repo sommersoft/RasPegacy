@@ -5,6 +5,7 @@ gl.setup(720, 40)
 
 node.alias("menu")
 
+bg = resourse.load_image("bg_top.png")
 title = resource.load_image("title.png")
 
 local json = require "json"
@@ -29,11 +30,13 @@ util.data_mapper{
 
 
 function node.render()
-    gl.clear(0.23, 0.24, 0.26, 0.6)
+    gl.clear(0, 0, 0, 1)
     --if tonumber(clk) < 2000 then
     --    gl.clear(0, 0, 0, 0)
     --end
 
+    -- Load menu background
+    bg:draw(0, 0, 720, 40, 1)
     -- Load Title (alpha determined by if menu is active [json "current:step1"]
     title:draw(241, 0, WIDTH, HEIGHT, 1)
 
