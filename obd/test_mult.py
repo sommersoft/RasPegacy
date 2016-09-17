@@ -1,4 +1,4 @@
-import obd
+import obd, time
 
 obd.logger.setLevel(obd.logging.DEBUG) # enables all debug information
 
@@ -8,10 +8,14 @@ cmd = [obd.commands.SPEED, obd.commands.RPM, obd.commands.INTAKE_PRESSURE] # sel
 
 #response = connection.query_multi(False, obd.commands.SPEED, obd.commands.RPM) # send the command, and parse the response
 #response = connection.query_multi(cmd) # send the command, and parse the response
-rpm, speed, intake = connection.query_multi(*cmd)
-
-print(rpm.value)
-print(speed.value)
-print(intake.value)
-#print(response.value) # returns unit-bearing values thanks to Pint
-#print(response.value.to("volt")) # user-friendly unit conversions
+while True:  
+  try:
+    rpm, speed, intake = connection.query_multi(*cmd)
+    
+    print(rpm.value)
+    print(speed.value.to('mph'))
+    print(intake.value.to('psi'))
+    time.sleep(0.5)
+    
+  except KeyboardInterrupt:
+    break
