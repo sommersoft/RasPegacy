@@ -10,7 +10,7 @@ cmd = [obd.commands.SPEED, obd.commands.RPM, obd.commands.INTAKE_PRESSURE] # sel
 #response = connection.query_multi(cmd) # send the command, and parse the response
 while True:  
   try:
-    rpm, speed, intake = connection.query_multi(*cmd)
+    speed, rpm, intake = connection.query_multi(*cmd)
     
     print(rpm.value)
     print(speed.value.to('mph'))
