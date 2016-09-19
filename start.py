@@ -6,7 +6,13 @@
 
 #Imports
 import RPi.GPIO as GPIO
-import socket, random, json, time, spidev, subprocess, sys#, obd
+import socket
+import random
+import json
+import time
+import spidev
+import subprocess
+import sys
 import Adafruit_BMP.BMP085 as BMP085
 from multiprocessing import Process
 
