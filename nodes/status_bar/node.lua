@@ -11,6 +11,8 @@ bg = resource.load_image("bg_bottom.png")
 RPi = resource.load_image("RPi_small.png")
 Subaru = resource.load_image("Subaru_Logo.png")
 
+local font = resource.load_font("Exo2.otf")
+
 util.data_mapper{
     ["sbar/msg"] = function(new_msg)
         --print("MSG", new_msg)
