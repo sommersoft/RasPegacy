@@ -174,7 +174,7 @@ def Sense():
     '''
     import obd
     global result_msg
-    result_msg "Initializing OBDII Connection..."
+    result_msg = "Initializing OBDII Connection..."
     obdII = obd.OBD()
     # TODO: catch obdII connect status and update result_msg
     
