@@ -245,6 +245,7 @@ def Sense():
     except KeyboardInterrupt:
         btns.join()
         spi.close
+        #obdII.close
         return
     
     btns.join()
