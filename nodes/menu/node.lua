@@ -20,11 +20,19 @@ end)
 util.data_mapper{
     ["clock/clk"] = function(new_clk)
         --print("CLK", new_clk)
-        clk = new_clk
+        if new_clk not nil then
+            clk = new_clk
+        else
+            clk = "--"
+        end
     end;
     ["clock/tmp"] = function(new_tmp)
         --print("TMP", new_tmp)
-        tmp = new_tmp
+        if new_tmp not nil then
+            tmp = new_tmp
+        else
+            tmp = "--"
+        end
     end;
 }
 
