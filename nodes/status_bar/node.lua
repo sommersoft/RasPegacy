@@ -16,7 +16,7 @@ local font = resource.load_font("Exo2.otf")
 util.data_mapper{
     ["sbar/msg"] = function(new_msg)
         --print("MSG", new_msg)
-        if not new_msg == nil then
+        if new_msg ~= nil then
             msg = new_msg
         else
             msg = " "
