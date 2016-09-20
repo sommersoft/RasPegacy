@@ -172,10 +172,10 @@ def Sense():
         Function to listen to sensors (BMP180, MCP3208, LIS3DH, ODBII).
         Will not run threaded so that it doesn't interfere with values being sent.
     '''
-    import obd
+    #import obd
     global result_msg
     result_msg = "Initializing OBDII Connection..."
-    obdII = obd.OBD()
+    #obdII = obd.OBD()
     # TODO: catch obdII connect status and update result_msg
     
     try:
@@ -224,8 +224,8 @@ def Sense():
                 info-beamer glRotate would look like this: (-135 + 271 * 0.28) = 38.08
             '''
 
-            boost = obdII.query(cmd)
-            #boost = random.randrange(-11, 17)
+            #boost = obdII.query(cmd)
+            boost = random.randrange(-11, 17)
             boost_pre = (boost - (baro * -1)) / (20 - (baro * -1))
             #print "boost_pre:(", boost," - ", (baro * -1), " / 20 - ", (baro * -1), " = ", format(boost_pre, '.2f')
             boost_needle = format(boost_pre, '.2f')
