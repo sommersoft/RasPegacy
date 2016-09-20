@@ -3,8 +3,6 @@
 # Author: Michael Schroeder (Code Borrows Cited in-line)
 # LICENSE: UNDECIDED (Apache or MIT most likely)
 
-
-#Imports
 import RPi.GPIO as GPIO
 import socket
 import random
@@ -16,8 +14,7 @@ import sys
 import Adafruit_BMP.BMP085 as BMP085
 from multiprocessing import Process
 
-global result # status bar message
-result = "Initializing Display & Sensor Array..."
+result_msg = "Initializing Display & Sensor Array..."
 
 #Setup sock for UPD updates
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -63,22 +60,19 @@ while True:
     if a == None:
         break
 
-#Setup python-OBD to talk to OBDLink SX
-#(causes critical errors if imported before starting info-beamer)
-#import obd
-#connection = obd.OBD()
-#PIDs = [X,X,X,X,X]
-#response = connection.query(PIDs)
-
-
-##Function to handle socket.sendtos
-##Original code from info-beamer '30c3-room' service.py https://github.com/dividuum/info-beamer-nodes/30c3-room
 def send(data):
+    ''' Function to handle socket.sendtos for info-beamer
+        Original code from info-beamer '30c3-room' service.py
+        https://github.com/dividuum/info-beamer-nodes/30c3-room
+    '''
     sock.sendto(data, ('127.0.0.1', 4444))
     #print >>sys.stderr, "SENT >>> ", data
 
-##Function to send values.
 def SendValues(temperature, boost, boost_needle, opress, opress_needle):
+    '''
+        Function to send values to info-beamer
+    '''
+    global result_msg
     #print "boost: ", str(boost), " boost needle:", str(boost_needle), " opress:", str(opress), " opress needle:", str(opress_needle)
     #send the current time
     clockmsg = time.strftime('menu/clock/clk:%H:%M')
@@ -92,7 +86,7 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
         send(clocktempf)
     
     #send the current status message
-    sbar_msg = 'status_bar/sbar/msg:' + result
+    sbar_msg = 'status_bar/sbar/msg:' + result_msg
     send(sbar_msg)
 
     #check which view we're using, so we know how to "send" the data
@@ -144,10 +138,14 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
 
         #run ploticuses
         scrip = '/home/pi/ploticus/boostplot.pl'
-        prun = subprocess.Popen('exec nice -n -5 sudo ploticus ' + scrip + ' -png -o /home/pi/RasPegacy/nodes/graph/boost.png', shell=True)
+        prun = subprocess.Popen('exec nice -n -5 sudo ploticus '
+                                + scrip 
+                                + ' -png -o /home/pi/RasPegacy/nodes/graph/boost.png', shell=True)
 
         scrip = '/home/pi/ploticus/opressplot.pl'
-        prun2 = subprocess.Popen('exec nice -n -5 sudo ploticus ' + scrip + ' -png -o /home/pi/RasPegacy/nodes/graph/opress.png', shell=True)
+        prun2 = subprocess.Popen('exec nice -n -5 sudo ploticus '
+                                + scrip
+                                + ' -png -o /home/pi/RasPegacy/nodes/graph/opress.png', shell=True)
         while True:
             a = prun2.poll()
             if a == None:
@@ -169,12 +167,17 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
 
         #return to get new values. bossman will give you no breaks!
 
-##Function to listen to sensors (BMP180, MCP3208, LIS3DH, ODBII). Will not run threaded so that it
-##doesn't interfere with values being sent.
 def Sense():
+    '''
+        Function to listen to sensors (BMP180, MCP3208, LIS3DH, ODBII).
+        Will not run threaded so that it doesn't interfere with values being sent.
+    '''
     import obd
+    global result_msg
+    result_msg "Initializing OBDII Connection..."
     obdII = obd.OBD()
-    cmd = obd.commands.INTAKE_PRESSURE
+    # TODO: catch obdII connect status and update result_msg
+    
     try:
         for i in range(3000):
         #Read BMP180 (i2c)
@@ -190,14 +193,19 @@ def Sense():
             #need to install python library
             
         #Read MCP3208 (SPI, 12bit base resolution)
-            #Read pressure signal.  Sensor is a Honeywell PX2 Sealed Gauge, 250PSIG operating pressure, 3.3v supply (Vss),
-            #with a Full Signal Scale ("FSS") of 10% - 90% Vss (0.33v - 2.97v; 80% swing = 2.64v).
+            ''' Read pressure signal.  Sensor is a Honeywell PX2 Sealed Gauge,
+                250PSIG operating pressure, 3.3v supply (Vss), with a Full
+                Signal Scale ("FSS") of 10% - 90% Vss 
+                (0.33v - 2.97v; 80% swing = 2.64v).
             
-            #Voltage equation is based on line slope intercept (y=mx+b). y=output, m = slope (range), x=input (signal)
-            #and b=offset. So, y=94.69(signal) + (-31.25)
+                Voltage equation is based on line slope intercept (y=mx+b).
+                y=output, m = slope (range), x=input (signal) and b=offset.
+                So, y=94.69(signal) + (-31.25)
 
-            #Since this is a Sealed Gauge, with a reference of 1atmA (14.7psi), the PSISG equation includes
-            #the barometric sensor value (BMP180 above) to offset the atmospheric pressure if used above sea-level.
+                Since this is a Sealed Gauge, with a reference of 1atmA (14.7psi),
+                the PSISG equation includes the barometric sensor value (BMP180 above)
+                to offset the atmospheric pressure if used above sea-level.
+            '''
             opress_raw = readMCP(0)
             if opress_raw < 409: opress_raw = 409
             opress_volt =  (opress_raw / 3685.5) * 2.97
@@ -210,9 +218,11 @@ def Sense():
 
         #Read OBDII signals (USB)
             #boost
-            #needle angle calculation (MIN = baro * -1, MAX = 20): P = [boost - MIN] / [MAX - MIN]
-            #example: boost = -5.06, baro = 14.7 || [-5.06 - -14.7](9.64) / [20 - -14.7](34.7) = 0.277 (0.28)
-            #info-beamer glRotate would look like this: (-135 + 271 * 0.28) = 38.08
+            '''
+                needle angle calculation (MIN = baro * -1, MAX = 20): P = [boost - MIN] / [MAX - MIN]
+                example: boost = -5.06, baro = 14.7 || [-5.06 - -14.7](9.64) / [20 - -14.7](34.7) = 0.277 (0.28)
+                info-beamer glRotate would look like this: (-135 + 271 * 0.28) = 38.08
+            '''
 
             boost = obdII.query(cmd)
             #boost = random.randrange(-11, 17)
@@ -240,18 +250,25 @@ def Sense():
     btns.join()
     exit()
 
-#Function to read data from the MCP3208
-#Original function was written by Jeremy Blythe, and can be found at: https://github.com/jerbly/Pi
-#I changed the xfer bytes construction to work the the 12bit MCP3204/MCP3208 (MCP32xx).
-#Current version only works with single-ended samples; differential is not constructed.
 def readMCP(channel):
+    '''
+        Function to read data from the MCP3208
+        Original function was written by Jeremy Blythe, and can
+        be found at: https://github.com/jerbly/Pi
+        I changed the xfer bytes construction to work the the 12bit
+        MCP3204/MCP3208 (MCP32xx). Current version only works with
+        single-ended samples; differential is not constructed.
+    '''
     #if ((channel > 3) or (channel < 0)):   #MCP3204
     if ((channel > 7) or (channel < 0)):   #MCP3208
         return -1
 
-    #Construct the xfer bytes. MCP32xx pads Byte1 with 5 zeroes before the start bit
-    #SNG/DIFF & D2 bits trail the start bit, and D1 & D0 bits are the first two bits of Byte2
-    #All bits after D0 are "Don't Care" bits.
+    '''
+        Construct the xfer bytes. MCP32xx pads Byte1 with 5 zeroes
+        before the start bit. SNG/DIFF & D2 bits trail the start bit,
+        and D1 & D0 bits are the first two bits of Byte2. All bits after
+        D0 are "Don't Care" bits.
+    '''
     byt1 = 6 if channel < 4 else 7   #Only matters for MCP3208; MCP3204 works w/ both
     byt2 = {0: '0', 1: '64', 2: '128', 3: '192', 4: '0', 5: '64', 6: '128', 7: '192'}
 
@@ -269,9 +286,12 @@ def readMCP(channel):
 
     return tadaa
 
-##Function to listen to button pushes. Will set menu items by updating JSON file. Will run threaded for duration
-##of program.
 def Buttons():
+    '''
+        Function to listen to button pushes. Will set menu items
+        by updating JSON file. Will run threaded for duration
+        of program.
+    '''
     while True:
         global result
         action = 'action'
