@@ -99,11 +99,11 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
         ##this view is updated directly to info-beamer by sending UDP packets to the "basic" node
         p = beam.poll()
         if p == None:
-            send("gauge/boost/set:" + str(boost))
+            send("gauge/boost/set:" + str(boost).rjust(5))
             send("gauge/boost/needle_rot:" + str(boost_needle))
-            send("gauge/opress/set:" + str(opress))
+            send("gauge/opress/set:" + str(opress).rjust(5))
             send("gauge/opress/needle_rot:" + str(opress_needle))
-            send("gauge/val1/set:" + str(random.random()))
+            send("gauge/val1/set:" + str(random.random()).rjust(5))
             send("gauge/val1/needle:_rot" + str(random.random()))
         elif p <= 0:
             print ('Display system has stopped working. RasPegacy is shutting down.')
@@ -157,9 +157,9 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
         if p == None:
             #make the numbers percentage compatible for the node.lua (x * 100 < .6,.8)
             #block_boost = "%.2f" % float((float(boost) / 17.5) / 100)
-            send("blocks/boost/set:" + str(boost))
-            send("blocks/opress/set:" + str(opress))
-            send("blocks/val1/set:" + str(random.random()))
+            send("blocks/boost/set:" + str(boost).rjust(5))
+            send("blocks/opress/set:" + str(opress).rjust(5))
+            send("blocks/val1/set:" + str(random.random()).rjust(5))
         elif p <= 0:
             print ('Display system has stopped working. RasPegacy is shutting down.')
             exit()
