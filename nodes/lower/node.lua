@@ -1,0 +1,2 @@
+-- node for non-gauge values
+-- like AFR, coolant temp, etc
