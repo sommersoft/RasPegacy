@@ -16,7 +16,6 @@ util.file_watch("view.json", function(content)
     res = resource.load_image(steps)
 end)
 
-
 local function gauge(conf)
     local x = conf.x
     local y = conf.y
@@ -72,23 +71,28 @@ local gauges = {
 util.data_mapper{
     ["(.*)/set"] = function(gauge, value)
         gauges[gauge].set(tonumber(value))
-
     end;
     ["(.*)/needle_rot"] = function(gauge, needle_rot)
         gauges[gauge].needle_set(tonumber(needle_rot))
-    
-
     end;
 }
 
 function node.render()
     gl.clear(0,0,0,0)
+    -- Static text
     gothic:write(85, 20, "BOOST", 16, 1, 1, 1, 1)
+    gothic:write(30, 260, "-20", 14, 1, 1, 1, 1)
+    gothic:write(192, 260, "20", 14, 1, 1, 1, 1)
+    
     gothic:write(300, 20, "OIL PRESSURE", 16, 1, 1, 1, 1)
+    gothic:write(270, 260, "0", 14, 1, 1, 1, 1)
+    gothic:write(432, 260, "250", 14, 1, 1, 1, 1)
+    
     gothic:write(560, 20, "VAL1", 16, 1, 1, 1, 1)
+    gothic:write(515, 260, "0", 14, 1, 1, 1, 1)
+    gothic:write(675, 260, "YES", 14, 1, 1, 1, 1)
+    
     for _, gauge in pairs(gauges) do
         gauge.draw()
     end    
 end
-
-
