@@ -79,6 +79,10 @@ util.data_mapper{
 
 function node.render()
     gl.clear(0,0,0,0)
+    -- Draw gauges
+    for _, gauge in pairs(gauges) do
+        gauge.draw()
+    end   
     -- Static text
     gothic:write(85, 20, "BOOST", 16, 1, 1, 1, 1)
     gothic:write(30, 260, "-20", 14, 1, 1, 1, 1)
@@ -92,7 +96,4 @@ function node.render()
     gothic:write(515, 260, "0", 14, 1, 1, 1, 1)
     gothic:write(675, 260, "YES", 14, 1, 1, 1, 1)
     
-    for _, gauge in pairs(gauges) do
-        gauge.draw()
-    end    
 end
