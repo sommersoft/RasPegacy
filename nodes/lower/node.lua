@@ -1,6 +1,6 @@
 --RasPegacy v0.1
---Status Bar Child
---Git is painful...
+--Lower Child
+--Extra Info: AFR, Coolant Temp, etc.
 
 gl.setup(720, 140)
 
@@ -19,7 +19,6 @@ util.data_mapper{
     end;
 }
 
-
 function node.render()
     gl.clear(1, 1, 1, 1)
     -- If I implement time based color swapping, will need to pass time here as well
@@ -28,6 +27,6 @@ function node.render()
     --end
 
     -- Write status message
-    font:write(WIDTH/2, HEIGHT/2, "LOWER NODE", 20, 1, 1, 1, 1)
+    font:write(300, 70, "LOWER NODE", 20, 1, 1, 1, 1)
     
 end
