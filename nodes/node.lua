@@ -38,15 +38,15 @@ function node.render()
         
     if curView == "1" then
         local basic = resource.render_child("basic")
-        basic:draw(0, 40, 720, 446)
+        basic:draw(0, 40, 720, 300)
         basic:dispose()
     elseif curView == "2" then
         local graph = resource.render_child("graph")
-        graph:draw(0, 40, 720, 446)
+        graph:draw(0, 40, 720, 300)
         graph:dispose()
     elseif curView == "3" then
         local blocks = resource.render_child("blocks")
-        blocks:draw(0, 40, 720, 446)
+        blocks:draw(0, 40, 720, 300)
         blocks:dispose()
     end
 
