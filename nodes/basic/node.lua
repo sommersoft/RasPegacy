@@ -30,7 +30,7 @@ local function gauge(conf)
         gl.rotate(-135 + 271 * needle_rot, 0, 0, 1)
         needle:draw(-size/2, -size/2, size/2, size/2,0.8)
         gl.popMatrix()
-        gothic:write(x-12, y+(y/8), string.sub(value, 0, 4), 18, 1, 1, 1, 1)
+        gothic:write(x-12, y+(y/8), value, 18, 1, 1, 1, 1)
     end
 
     local function set(new_value)
@@ -53,17 +53,17 @@ node.alias("gauge")
 local gauges = {
     boost = gauge{
         x = 120;
-        y = 200;
+        y = 180;
         size = 240;
     };
     opress = gauge{
         x = 360;
-        y = 200;
+        y = 180;
         size = 240;
     };
     val1 = gauge{
         x = 600;
-        y = 200;
+        y = 180;
         size = 240;
     };
 }
@@ -84,16 +84,16 @@ function node.render()
         gauge.draw()
     end   
     -- Static text
-    gothic:write(85, 20, "BOOST", 16, 1, 1, 1, 1)
-    gothic:write(30, 260, "-20", 14, 1, 1, 1, 1)
-    gothic:write(192, 260, "20", 14, 1, 1, 1, 1)
+    gothic:write(90, 20, "BOOST", 16, 1, 1, 1, 1)
+    gothic:write(30, 240, "-20", 14, 1, 1, 1, 1)
+    gothic:write(192, 240, "20", 14, 1, 1, 1, 1)
     
     gothic:write(300, 20, "OIL PRESSURE", 16, 1, 1, 1, 1)
-    gothic:write(270, 260, "0", 14, 1, 1, 1, 1)
-    gothic:write(432, 260, "250", 14, 1, 1, 1, 1)
+    gothic:write(270, 240, "0", 14, 1, 1, 1, 1)
+    gothic:write(430, 240, "250", 14, 1, 1, 1, 1)
     
     gothic:write(560, 20, "VAL1", 16, 1, 1, 1, 1)
-    gothic:write(515, 260, "0", 14, 1, 1, 1, 1)
-    gothic:write(675, 260, "YES", 14, 1, 1, 1, 1)
+    gothic:write(515, 240, "0", 14, 1, 1, 1, 1)
+    gothic:write(670, 240, "YES", 14, 1, 1, 1, 1)
     
 end
