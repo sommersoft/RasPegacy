@@ -88,12 +88,12 @@ function node.render()
     gothic:write(30, 200, "-20", 14, 1, 1, 1, 1)
     gothic:write(192, 200, "20", 14, 1, 1, 1, 1)
     
-    gothic:write(305, 210, "OIL PRESS", 16, 1, 1, 1, 1)
-    gothic:write(270, 200, "0", 14, 1, 1, 1, 1)
+    gothic:write(325, 210, "OIL PRESS", 16, 1, 1, 1, 1)
+    gothic:write(280, 200, "0", 14, 1, 1, 1, 1)
     gothic:write(430, 200, "250", 14, 1, 1, 1, 1)
     
-    gothic:write(560, 210, "VAL1", 16, 1, 1, 1, 1)
-    gothic:write(515, 200, "0", 14, 1, 1, 1, 1)
-    gothic:write(670, 200, "YES", 14, 1, 1, 1, 1)
+    gothic:write(580, 210, "VAL1", 16, 1, 1, 1, 1)
+    gothic:write(525, 200, "0", 14, 1, 1, 1, 1)
+    gothic:write(665, 200, "100", 14, 1, 1, 1, 1)
     
 end
