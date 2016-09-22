@@ -70,7 +70,7 @@ local gauges = {
 
 util.data_mapper{
     ["(.*)/set"] = function(gauge, value)
-        gauges[gauge].set(tonumber(value))
+        gauges[gauge].set(value)
     end;
     ["(.*)/needle_rot"] = function(gauge, needle_rot)
         gauges[gauge].needle_set(tonumber(needle_rot))
