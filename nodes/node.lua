@@ -29,6 +29,11 @@ function node.render()
     sbar:draw(0, 446, 720, 486)
     sbar:dispose()
     
+    -- Render the lower node area
+    local lower = resource.render_child("lower")
+    lower:draw(0, 300, 720, 445)
+    lower:dispose()
+    
     -- Select which view the user has selected then render that child
         
     if curView == "1" then
