@@ -1,7 +1,7 @@
 --RasPegacy v0.1
 --GL Blocks Gauge Child
 
-gl.setup(720, 446)
+gl.setup(720, 260)
 
 local font = resource.load_font "Exo2.otf"
 util.resource_loader{
@@ -64,19 +64,19 @@ node.alias("blocks")
 local blocks = {
     boost = block{
         x = 119;
-        y = 180;
+        y = 140;
         size = 240;
         nam = "bst";
     };
     opress = block{
         x = 361;
-        y = 180;
+        y = 140;
         size = 240;
         nam = "oprs";
     };
     val1 = block{
         x = 602;
-        y = 180;
+        y = 140;
         size = 240;
         nam = "v1"
     };
