@@ -1,7 +1,7 @@
 --RasPegacy v0.1
 --Basic Round Gauge Child
 
-gl.setup(720, 446)
+gl.setup(720, 260)
 
 --local res = util.auto_loader()
 local gothic = resource.load_font "Exo2.otf"
