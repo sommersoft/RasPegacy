@@ -22,7 +22,6 @@ local function block(conf)
         -- Figure out the percentage of each value to determine which color block to display
         -- Max boost: 17.5psi, Max Opressure: 105, Max Val1: 100
         if nam == "bst" then
-            --print "BOOOOOOSTTTT!!!!!!"
             pct = value / 17.5
             new_value = tostring(value)
         else
@@ -65,19 +64,19 @@ node.alias("blocks")
 local blocks = {
     boost = block{
         x = 119;
-        y = 200;
+        y = 180;
         size = 240;
         nam = "bst";
     };
     opress = block{
         x = 361;
-        y = 200;
+        y = 180;
         size = 240;
         nam = "oprs";
     };
     val1 = block{
         x = 602;
-        y = 200;
+        y = 180;
         size = 240;
         nam = "v1"
     };
@@ -91,7 +90,7 @@ util.data_mapper{
 
 function node.render()
     gl.clear(0,0,0,0)
-    font:write(80, 20, "BOOST", 20, 1, 1, 1, 1)
+    font:write(90, 20, "BOOST", 20, 1, 1, 1, 1)
     font:write(290, 20, "OIL PRESSURE", 20, 1, 1, 1, 1)
     font:write(550, 20, "VAL1", 20, 1, 1, 1, 1)
     for i, block in pairs(blocks) do
