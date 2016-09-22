@@ -84,16 +84,16 @@ function node.render()
         gauge.draw()
     end   
     -- Static text
-    gothic:write(90, 20, "BOOST", 16, 1, 1, 1, 1)
-    gothic:write(30, 240, "-20", 14, 1, 1, 1, 1)
-    gothic:write(192, 240, "20", 14, 1, 1, 1, 1)
+    gothic:write(93, 210, "BOOST", 16, 1, 1, 1, 1)
+    gothic:write(30, 200, "-20", 14, 1, 1, 1, 1)
+    gothic:write(192, 200, "20", 14, 1, 1, 1, 1)
     
-    gothic:write(300, 20, "OIL PRESSURE", 16, 1, 1, 1, 1)
-    gothic:write(270, 240, "0", 14, 1, 1, 1, 1)
-    gothic:write(430, 240, "250", 14, 1, 1, 1, 1)
+    gothic:write(305, 210, "OIL PRESS", 16, 1, 1, 1, 1)
+    gothic:write(270, 200, "0", 14, 1, 1, 1, 1)
+    gothic:write(430, 200, "250", 14, 1, 1, 1, 1)
     
-    gothic:write(560, 20, "VAL1", 16, 1, 1, 1, 1)
-    gothic:write(515, 240, "0", 14, 1, 1, 1, 1)
-    gothic:write(670, 240, "YES", 14, 1, 1, 1, 1)
+    gothic:write(560, 210, "VAL1", 16, 1, 1, 1, 1)
+    gothic:write(515, 200, "0", 14, 1, 1, 1, 1)
+    gothic:write(670, 200, "YES", 14, 1, 1, 1, 1)
     
 end
