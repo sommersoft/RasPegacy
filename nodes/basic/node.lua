@@ -19,7 +19,7 @@ end)
 local function gauge(conf)
     local x = conf.x
     local y = conf.y
-    local size = conf.size or 150
+    local size = conf.size or 240
     local value = 0
     local needle_rot = 0
     local function draw()
@@ -53,17 +53,17 @@ node.alias("gauge")
 local gauges = {
     boost = gauge{
         x = 120;
-        y = 180;
+        y = 140;
         size = 240;
     };
     opress = gauge{
         x = 360;
-        y = 180;
+        y = 140;
         size = 240;
     };
     val1 = gauge{
         x = 600;
-        y = 180;
+        y = 140;
         size = 240;
     };
 }
