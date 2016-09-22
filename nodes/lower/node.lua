@@ -27,6 +27,6 @@ function node.render()
     --end
 
     -- Write status message
-    font:write(300, 70, "LOWER NODE", 20, 1, 1, 1, 1)
+    font:write(300, 70, "LOWER NODE", 20, 0, 0, 0, 1)
     
 end
