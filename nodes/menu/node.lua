@@ -17,6 +17,8 @@ util.file_watch("menu.json", function(content)
     menpic = resource.load_image(steps)
 end)
 
+local clk = "00:00"
+local tmp = "0"
 util.data_mapper{
     ["clock/clk"] = function(new_clk)
         --print("CLK", new_clk)
