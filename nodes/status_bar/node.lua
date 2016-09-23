@@ -13,14 +13,11 @@ Subaru = resource.load_image("Subaru_Logo.png")
 
 local font = resource.load_font("Exo2.otf")
 
+local msg = " "
 util.data_mapper{
     ["sbar/msg"] = function(new_msg)
         --print("MSG", new_msg)
-        if new_msg ~= nil then
-            msg = new_msg
-        else
-            msg = " "
-        end
+        msg = new_msg
     end;
 }
 
@@ -38,7 +35,9 @@ function node.render()
     Subaru:draw(608, 1, 676, 39, 1)
 
     -- Write status message
-    font:write(10, 2, msg, 18, 1, 1, 1, 1)
+    if msg then
+        font:write(10, 2, msg, 18, 1, 1, 1, 1)
+    end
     
 end
 
