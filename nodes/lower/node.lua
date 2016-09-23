@@ -11,27 +11,15 @@ local font = resource.load_font("Exo2.otf")
 util.data_mapper{
     ["lower/coolant"] = function(new_cool)
         --print("MSG", new_msg)
-        if new_cool ~= nil then
-            cool = tostring(new_cool)
-        else
-            cool = " "
-        end
+        cool = tostring(new_cool)
     end;
     ["lower/tps"] = function(new_tps)
         --print("MSG", new_msg)
-        if new_tps ~= nil then
-            tps = tostring(new_tps)
-        else
-            tps = " "
-        end
+        tps = tostring(new_tps)
     end;
     ["lower/maf"] = function(new_maf)
         --print("MSG", new_msg)
-        if new_maf ~= nil then
-            maf = tostring(new_maf)
-        else
-            maf = " "
-        end
+        maf = tostring(new_maf)
     end;
 }
 
