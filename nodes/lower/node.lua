@@ -13,16 +13,16 @@ local maf = "--"
 
 util.data_mapper{
     ["lower/coolant"] = function(new_cool)
-        print("cool: ", new_cool)
         cool = tostring(new_cool)
+        print("cool", cool)
     end;
     ["lower/tps"] = function(new_tps)
-        print("tps: ", new_tps)
         tps = tostring(new_tps)
+        print("tps", tps)
     end;
     ["lower/maf"] = function(new_maf)
-        print("maf: ", new_maf)
         maf = tostring(new_maf)
+        print("maf", maf)
     end;
 }
 
