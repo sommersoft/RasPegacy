@@ -43,8 +43,8 @@ function node.render()
     --end
 
     -- Write status message
-    font:write(30, 20, "COOLANT TEMP: " + cool, 20, 1, 1, 1, 1)
-    font:write(80, 20, "MAF: " + maf, 20, 1, 1, 1, 1)
-    font:write(130, 20, "THROTTLE POS: " + tps, 20, 1, 1, 1, 1)
+    font:write(30, 20, "COOLANT TEMP: " .. cool, 20, 1, 1, 1, 1)
+    font:write(80, 20, "MAF: " .. maf, 20, 1, 1, 1, 1)
+    font:write(130, 20, "THROTTLE POS: " .. tps, 20, 1, 1, 1, 1)
     
 end
