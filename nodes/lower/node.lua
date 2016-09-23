@@ -9,24 +9,42 @@ node.alias("lower")
 local font = resource.load_font("Exo2.otf")
 
 util.data_mapper{
-    ["lower/msg"] = function(new_msg)
+    ["lower/coolant"] = function(new_cool)
         --print("MSG", new_msg)
-        if new_msg ~= nil then
-            msg = new_msg
+        if new_cool ~= nil then
+            cool = tostring(new_cool)
         else
-            msg = " "
+            cool = " "
+        end
+    end;
+    ["lower/tps"] = function(new_tps)
+        --print("MSG", new_msg)
+        if new_tps ~= nil then
+            tps = tostring(new_tps)
+        else
+            tps = " "
+        end
+    end;
+    ["lower/maf"] = function(new_maf)
+        --print("MSG", new_msg)
+        if new_maf ~= nil then
+            maf = tostring(new_maf)
+        else
+            maf = " "
         end
     end;
 }
 
 function node.render()
-    gl.clear(1, 1, 1, 1)
+    gl.clear(0, 0, 0, 1)
     -- If I implement time based color swapping, will need to pass time here as well
     --if tonumber(clk) < 2000 then
     --    gl.clear(0, 0, 0, 0)
     --end
 
     -- Write status message
-    font:write(300, 70, "LOWER NODE", 20, 0, 0, 0, 1)
+    font:write(30, 20, "COOLANT TEMP: " + cool, 20, 1, 1, 1, 1)
+    font:write(80, 20, "MAF: " + maf, 20, 1, 1, 1, 1)
+    font:write(130, 20, "THROTTLE POS: " + tps, 20, 1, 1, 1, 1)
     
 end
