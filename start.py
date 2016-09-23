@@ -14,12 +14,6 @@ import sys
 import Adafruit_BMP.BMP085 as BMP085
 from multiprocessing import Process
 
-result_msg = "Initializing Display & Sensor Array..."
-coolant_temp = 182
-maf = "4 g/s"
-tps = "30%"
-
-
 #Setup sock for UPD updates
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -412,8 +406,10 @@ def Buttons():
 
 ##Main script init
 if __name__ == "__main__":
-    #StartBeam()
     btns = Process(target=Buttons)
     btns.start()
     Sense()
-    #btns.join()
+    result_msg = "Initializing Display & Sensor Array..."
+    coolant_temp = 182
+    maf = "4 g/s"
+    tps = "30%"
