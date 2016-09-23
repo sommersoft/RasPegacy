@@ -7,6 +7,9 @@ gl.setup(720, 140)
 node.alias("lower")
 
 local font = resource.load_font("Exo2.otf")
+local cool = "--"
+local tps = "--"
+local maf = "--"
 
 util.data_mapper{
     ["lower/coolant"] = function(new_cool)
