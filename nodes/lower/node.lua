@@ -10,15 +10,15 @@ local font = resource.load_font("Exo2.otf")
 
 util.data_mapper{
     ["lower/coolant"] = function(new_cool)
-        --print("MSG", new_msg)
+        print("cool: " .. new_cool)
         cool = tostring(new_cool)
     end;
     ["lower/tps"] = function(new_tps)
-        --print("MSG", new_msg)
+        print("tps: " .. new_tps)
         tps = tostring(new_tps)
     end;
     ["lower/maf"] = function(new_maf)
-        --print("MSG", new_msg)
+        print("maf: " .. new_maf)
         maf = tostring(new_maf)
     end;
 }
