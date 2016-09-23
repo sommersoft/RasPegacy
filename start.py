@@ -15,7 +15,7 @@ import Adafruit_BMP.BMP085 as BMP085
 from multiprocessing import Process
 
 result_msg = "Initializing Display & Sensor Array..."
-coolant_temp = "182 °"
+coolant_temp = 182
 maf = "4 g/s"
 tps = "30%"
 
