@@ -68,7 +68,7 @@ def send(data):
         https://github.com/dividuum/info-beamer-nodes/30c3-room
     '''
     sock.sendto(data, ('127.0.0.1', 4444))
-    #print >>sys.stderr, "SENT >>> ", data
+    print >>sys.stderr, "SENT >>> ", data
 
 def SendValues(temperature, boost, boost_needle, opress, opress_needle):
     '''
