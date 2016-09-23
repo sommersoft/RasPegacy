@@ -15,6 +15,10 @@ import Adafruit_BMP.BMP085 as BMP085
 from multiprocessing import Process
 
 result_msg = "Initializing Display & Sensor Array..."
+coolant_temp = "182 °"
+maf = "4 g/s"
+tps = "30%"
+
 
 #Setup sock for UPD updates
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -73,6 +77,9 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
         Function to send values to info-beamer
     '''
     global result_msg
+    global coolant_temp
+    global maf
+    global tps
     #print "boost: ", str(boost), " boost needle:", str(boost_needle), " opress:", str(opress), " opress needle:", str(opress_needle)
     #send the current time
     clockmsg = time.strftime('menu/clock/clk:%H:%M')
@@ -88,6 +95,11 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
     #send the current status message
     sbar_msg = 'status_bar/sbar/msg:' + result_msg
     send(sbar_msg)
+    
+    #send lower values (viewed in all views)
+    send("lower/coolant:" + str(coolant_temp))
+    send("lower/maf:" + str(maf))
+    send("lower/tps:" + str(tps))
 
     #check which view we're using, so we know how to "send" the data
     with open('/home/pi/RasPegacy/nodes/view.json') as data_file: #, encoding='utf-8') as data_file:
@@ -174,6 +186,10 @@ def Sense():
     '''
     #import obd
     global result_msg
+    global coolant_temp
+    global maf
+    global tps
+    
     result_msg = "Initializing OBDII Connection..."
     #obdII = obd.OBD()
     # TODO: catch obdII connect status and update result_msg
