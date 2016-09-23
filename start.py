@@ -95,9 +95,9 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
     send(sbar_msg)
     
     #send lower values (viewed in all views)
-    send("lower/coolant:" + str(coolant_temp))
-    send("lower/maf:" + str(maf))
-    send("lower/tps:" + str(tps))
+    send("lower/set/coolant:" + str(coolant_temp))
+    send("lower/set/maf:" + str(maf))
+    send("lower/set/tps:" + str(tps))
 
     #check which view we're using, so we know how to "send" the data
     with open('/home/pi/RasPegacy/nodes/view.json') as data_file: #, encoding='utf-8') as data_file:
