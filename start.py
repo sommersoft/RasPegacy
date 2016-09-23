@@ -14,6 +14,10 @@ import sys
 import Adafruit_BMP.BMP085 as BMP085
 from multiprocessing import Process
 
+coolant_temp = None
+maf = None
+tps = None
+
 #Setup sock for UPD updates
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -180,6 +184,9 @@ def Sense():
     '''
     #import obd
     global result_msg
+    global coolant_temp
+    global maf
+    global tps
     
     result_msg = "Initializing OBDII Connection..."
     #obdII = obd.OBD()
