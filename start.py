@@ -180,9 +180,6 @@ def Sense():
     '''
     #import obd
     global result_msg
-    global coolant_temp
-    global maf
-    global tps
     
     result_msg = "Initializing OBDII Connection..."
     #obdII = obd.OBD()
@@ -243,7 +240,13 @@ def Sense():
             #a/f learning 1
 
             #coolant temp?
+            coolant_temp = 182
+            
+            #maf
+            maf = "4 g/s"
 
+            #tps
+            tps = "30%"
 
             #what else?
             
@@ -410,6 +413,3 @@ if __name__ == "__main__":
     btns.start()
     Sense()
     result_msg = "Initializing Display & Sensor Array..."
-    coolant_temp = 182
-    maf = "4 g/s"
-    tps = "30%"
