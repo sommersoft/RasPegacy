@@ -1,6 +1,10 @@
 # RasPegacy
 Another Boring, RPi Car Data Display... Designed for use with 05-09 Subaru Legacies with OEM Navigation
 
+# pygame branch
+this is the branch where I will explore using pygame for a "richer" gauge display system.
+and, I get to learn pygame as a bonus (and apply to possible game creation in the future)!
+
 # Hardware System Components (as designed)
 1. Raspberry Pi A+
 2. SeeedStudio RTC Module (DS3231)
