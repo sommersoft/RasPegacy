@@ -86,11 +86,11 @@ function node.render()
     -- Static text
     gothic:write(93, 210, "BOOST", 16, 1, 1, 1, 1)
     gothic:write(30, 200, "-20", 14, 1, 1, 1, 1)
-    gothic:write(190, 200, "20", 14, 1, 1, 1, 1)
+    gothic:write(186, 200, "20", 14, 1, 1, 1, 1)
     
     gothic:write(325, 210, "OIL PRESS", 16, 1, 1, 1, 1)
     gothic:write(280, 200, "0", 14, 1, 1, 1, 1)
-    gothic:write(428, 200, "250", 14, 1, 1, 1, 1)
+    gothic:write(424, 200, "250", 14, 1, 1, 1, 1)
     
     gothic:write(580, 210, "VAL1", 16, 1, 1, 1, 1)
     gothic:write(525, 200, "0", 14, 1, 1, 1, 1)
