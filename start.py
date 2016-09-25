@@ -114,7 +114,7 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
             send("gauge/opress/set:" + str(opress).rjust(5))
             send("gauge/opress/needle_rot:" + str(opress_needle))
             send("gauge/val1/set:" + ("%2f" % random.random()).rjust(5))
-            send("gauge/val1/needle:_rot" + str(random.random()))
+            send("gauge/val1/needle_rot:" + str(random.random()))
         elif p <= 0:
             print ('Display system has stopped working. RasPegacy is shutting down.')
             exit()
