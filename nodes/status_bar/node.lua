@@ -36,7 +36,7 @@ function node.render()
 
     -- Write status message
     if msg then
-        font:write(10, 2, msg, 18, 1, 1, 1, 1)
+        font:write(20, 2, msg, 18, 1, 1, 1, 1)
     end
     
 end
