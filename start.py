@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 # RasPegacy - A Raspberry Pi Based System
 # Author: Michael Schroeder (Code Borrows Cited in-line)
 # LICENSE: UNDECIDED (Apache or MIT most likely)
@@ -14,39 +14,39 @@ import sys
 import Adafruit_BMP.BMP085 as BMP085
 from multiprocessing import Process
 
-coolant_temp = None
-maf = None
-tps = None
+# init constant value dict
+cvalues = {"c_temp": None, "maf": None, "tps": None,
+           "temp": None, "sbar_msg": None}
 
-#Setup sock for UPD updates
+# Setup sock for UPD updates
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-#Setup BMP180 (aka BMP085)
+# Setup BMP180 (aka BMP085)
 BMPsensor = BMP085.BMP085(mode=BMP085.BMP085_HIGHRES)
 
-#Setup spidev to talk to MCP3208
+# Setup spidev to talk to MCP3208
 spi = spidev.SpiDev()
 spi.open(0,0)
 spi.max_speed_hz = 1000000  #MCP3208 datasheet states to maintain at least 10kHz sample rate
 spi.mode = 0b01
 spi.bits_per_word = 8
 
-#Create value lists
+# Create value lists for ploticus
 li_boost = ['boost']
 li_opress = ['opress']
 #li_val1 = ['val1']
-#acel_X = ['']
-#acel_Y = ['']
+#acel_X = [''] # might move accelerometer vals
+#acel_Y = [''] # to cvalues **kwarg list
 #acel_Z = ['']
 
-#Pin Assignments
+# Pin Assignments
 btnCenter = 19
 btnUp = 20
 btnDown = 13
 btnLeft = 16
 btnRight = 12
 
-#Setup GPIO 
+# Setup GPIO 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(btnCenter, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(btnUp, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -54,8 +54,8 @@ GPIO.setup(btnDown, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(btnLeft, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(btnRight, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-#First things first, get info-beamer running (view selected from main node)
-#http://www.info-beamer.com/pi
+# First things first, get info-beamer running (view selected from main node)
+# http://www.info-beamer.com/pi
 beam = subprocess.Popen('exec nice -n -5 sudo /home/pi/info-beamer-pi/info-beamer /home/pi/RasPegacy/nodes', shell=True)
 while True:
     a = beam.poll()
@@ -70,43 +70,39 @@ def send(data):
     sock.sendto(data, ('127.0.0.1', 4444))
     #print >>sys.stderr, "SENT >>> ", data
 
-def SendValues(temperature, boost, boost_needle, opress, opress_needle):
+def SendValues(boost, boost_needle, opress, opress_needle, **cvals):
     '''
         Function to send values to info-beamer
     '''
-    global result_msg
-    global coolant_temp
-    global maf
-    global tps
     #print "boost: ", str(boost), " boost needle:", str(boost_needle), " opress:", str(opress), " opress needle:", str(opress_needle)
-    #send the current time
+    # send the current time
     clockmsg = time.strftime('menu/clock/clk:%H:%M')
     send(clockmsg)
-    #print time.strftime("menu/clock/clk:%H:%M")
 
-    #send the interior temperature
-    if temperature:
-        clocktemp = 'menu/clock/tmp:' + temperature
+    # send the interior temperature
+    if cvals["temp"]:
+        clocktemp = 'menu/clock/tmp:' + cvals["temp"]
         clocktempf = clocktemp
         send(clocktempf)
     
-    #send the current status message
-    sbar_msg = 'status_bar/sbar/msg:' + result_msg
-    send(sbar_msg)
+    # send the current status message
+    if cvals["sbar_msg"]:
+        sbar_msg = 'status_bar/sbar/msg:' + result_msg
+        send(sbar_msg)
     
-    #send lower values (viewed in all views)
-    send("lower/set/coolant:" + str(coolant_temp))
-    send("lower/set/maf:" + str(maf))
-    send("lower/set/tps:" + str(tps))
+    # send lower values (visible in all views)
+    if cvals["c_temp"]: send("lower/set/coolant:" + str(cvals["c_temp"]))
+    if cvals["maf"]: send("lower/set/maf:" + str(cvals["maf"]))
+    if cvals["tps"]: send("lower/set/tps:" + str(cvals["tps"]))
 
-    #check which view we're using, so we know how to "send" the data
+    # check which view we're using, so we know how to "send" the data
     with open('/home/pi/RasPegacy/nodes/view.json') as data_file: #, encoding='utf-8') as data_file:
         data = json.loads(data_file.read())
     result = data["view"]["top"]
     #print('result: ' + result)
 
-    if result == "1": #round gauge view 
-        ##this view is updated directly to info-beamer by sending UDP packets to the "basic" node
+    if result == "1": # round gauge view 
+        # this view is updated directly to info-beamer by sending UDP packets to the "basic" node
         p = beam.poll()
         if p == None:
             send("gauge/boost/set:" + str(boost).rjust(5))
@@ -118,10 +114,14 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
         elif p <= 0:
             print ('Display system has stopped working. RasPegacy is shutting down.')
             exit()
-    elif result == "2": #graphing view
-        ##this view is updated using ploticus images (PNG)
-        ##http://ploticus.sourceforge.org/
-        #update value lists (first in first out)
+    elif result == "2": # graphing view
+        """
+        this view is updated using ploticus images (PNG)
+        http://ploticus.sourceforge.org/
+        update value lists (first in first out)
+        !! IS CURRENTLY TOO SLOW TO USE !! minplot is in work,
+        but only supports SVG files
+        """
         if len(li_boost) < 31:
             li_boost.append(boost)
         else:
@@ -133,9 +133,9 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
         else:
             del li_opress[1]
             li_opress.append(random.randrange(120)) #opress)
-        #add val1 updates if used
+        # add val1 updates if used
 
-        #write value lists to file for ploticus and info-beamer
+        # write value lists to file for ploticus and info-beamer
         with open('/home/pi/ploticus/dlog_boost', 'w') as f:
             for s in li_boost:
                 f.write("%s\n" % (s))
@@ -143,10 +143,10 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
             for s in li_opress:
                 f.write("%s\n" % (s))
 
-        #this might get changed to a UDP send for info-beamer update
+        # this might get changed to a UDP send for info-beamer update
         subprocess.Popen('cp /home/pi/ploticus/dlog_boost /home/pi/RasPegacy/nodes/graph/boost.txt', shell=True)
 
-        #run ploticuses
+        # run ploticuses
         scrip = '/home/pi/ploticus/boostplot.pl'
         prun = subprocess.Popen('exec nice -n -5 sudo ploticus '
                                 + scrip 
@@ -162,11 +162,10 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
                 pass
             else:
                 break
-    elif result == "3": #this is the blocks view. send straight to info-beamer w/UDP
+    elif result == "3": # this is the blocks view. send straight to info-beamer w/UDP
         p = beam.poll()
         if p == None:
-            #make the numbers percentage compatible for the node.lua (x * 100 < .6,.8)
-            #block_boost = "%.2f" % float((float(boost) / 17.5) / 100)
+            # make the numbers percentage compatible for the node.lua (x * 100 < .6,.8)
             send("blocks/boost/set:" + str(boost).rjust(5))
             send("blocks/opress/set:" + str(opress).rjust(5))
             send("blocks/val1/set:" + str(random.random()).rjust(5))
@@ -174,39 +173,31 @@ def SendValues(temperature, boost, boost_needle, opress, opress_needle):
             print ('Display system has stopped working. RasPegacy is shutting down.')
             exit()
 
-
-        #return to get new values. bossman will give you no breaks!
-
 def Sense():
     '''
         Function to listen to sensors (BMP180, MCP3208, LIS3DH, ODBII).
         Will not run threaded so that it doesn't interfere with values being sent.
     '''
     #import obd
-    global result_msg
-    global coolant_temp
-    global maf
-    global tps
-    
-    result_msg = "Initializing OBDII Connection..."
+    cvalues["sbar_msg"] = "Initializing OBDII Connection..."
     #obdII = obd.OBD()
     # TODO: catch obdII connect status and update result_msg
     
     try:
         for i in range(3000):
-        #Read BMP180 (i2c)
+        # Read BMP180 (i2c)
             #C to F: C*1.8+32
             cels = BMPsensor.read_temperature()
-            temperature = "%.0f" % (cels * 1.8 +32)
+            cvalues["temp"] = "%.0f" % (cels * 1.8 +32)
             #print temperature
             pascals = BMPsensor.read_pressure()
             #baro = "%.2f" % (0.000145038 * pascals)
             baro = (0.000145038 * pascals)
             
-        #Read LIS3DH (i2c)
+        # Read LIS3DH (i2c)
             #need to install python library
             
-        #Read MCP3208 (SPI, 12bit base resolution)
+        # Read MCP3208 (SPI, 12bit base resolution)
             ''' Read pressure signal.  Sensor is a Honeywell PX2 Sealed Gauge,
                 250PSIG operating pressure, 3.3v supply (Vss), with a Full
                 Signal Scale ("FSS") of 10% - 90% Vss 
@@ -230,36 +221,37 @@ def Sense():
             #print ("%4d/3685.5 => %5.3f V => %d PSI" % (opress_raw, opress_volt, opress_PSIG))
 
 
-        #Read OBDII signals (USB)
-            #boost
+        # Read OBDII signals (USB)
+            #cmd = (obd.commands.COOLANT_TEMP, obd.commands.MAF, obd.commands.TPS,
+            #       obd.commands.BOOST)
+            #response = obdII.query_multi(*cmd)
             '''
+                BOOST
                 needle angle calculation (MIN = baro * -1, MAX = 20): P = [boost - MIN] / [MAX - MIN]
                 example: boost = -5.06, baro = 14.7 || [-5.06 - -14.7](9.64) / [20 - -14.7](34.7) = 0.277 (0.28)
                 info-beamer glRotate would look like this: (-135 + 271 * 0.28) = 38.08
             '''
-
-            #boost = obdII.query(cmd)
             boost = random.randrange(-11, 17)
             boost_pre = (boost - (baro * -1)) / (20 - (baro * -1))
             #print "boost_pre:(", boost," - ", (baro * -1), " / 20 - ", (baro * -1), " = ", format(boost_pre, '.2f')
             boost_needle = format(boost_pre, '.2f')
 
-            #a/f learning 1
+            # a/f learning 1?
 
-            #coolant temp?
-            coolant_temp = 182
+            # coolant temp
+            cvalues["c_temp"] = 182
             
-            #maf
-            maf = "4 g/s"
+            # maf
+            cvalues["maf"] = "4 g/s"
 
-            #tps
-            tps = "30%"
+            # tps
+            cvalues["tps"] = "30%"
 
-            #what else?
+            # what else?
             
             
         #Send 'em!
-            SendValues(temperature, boost, boost_needle, opress_final, opress_needle)
+            SendValues(boost, boost_needle, opress_final, opress_needle, **cvalues)
             time.sleep(0.5)
 
     except KeyboardInterrupt:
@@ -269,6 +261,8 @@ def Sense():
         return
     
     btns.join()
+    spi.close
+    #obdII.close
     exit()
 
 def readMCP(channel):
@@ -290,15 +284,15 @@ def readMCP(channel):
         and D1 & D0 bits are the first two bits of Byte2. All bits after
         D0 are "Don't Care" bits.
     '''
-    byt1 = 6 if channel < 4 else 7   #Only matters for MCP3208; MCP3204 works w/ both
+    byt1 = 6 if channel < 4 else 7   # Only matters for MCP3208; MCP3204 works w/ both
     byt2 = {0: '0', 1: '64', 2: '128', 3: '192', 4: '0', 5: '64', 6: '128', 7: '192'}
 
-    #Take 10 samples to get an average, and send the smoothed out
+    # Take 10 samples to get an average, and send the smoothed out
     smooth = []
     for i in range(10):
         r = spi.xfer2([byt1, int(byt2[channel]), 0])
-        #The MCP32xx responds with samples starting at the 5th bit in Byte2, so we & and shift
-        #accordingly.
+        # The MCP32xx responds with samples starting at the 5th bit in Byte2, so we & and shift
+        # accordingly.
         adcout = ((r[1]&5) << 8) + r[2]
         smooth.append(adcout)
         time.sleep(0.001)
@@ -338,21 +332,21 @@ def Buttons():
                 with open('/home/pi/RasPegacy/nodes/menu/menu.json') as menu_file:#, encoding='utf-8') as menu_file:
                     data = json.loads(menu_file.read())
                 menu_step1 = data["current"]["step1"]
-                if menu_step1 == '0': #step1 '0' = main menu
+                if menu_step1 == '0': # step1 '0' = main menu
                     if action == 'right':
                         menu_step1 = '1'
                         menu_step2 = '0'
                         menu_step3 = '0'
-                elif menu_step1 == '1': #step1 '0' = 'view'; '2' = 'about'
+                elif menu_step1 == '1': # step1 '1' = 'view'; '2' = 'about'
                     menu_step2 = data["current"]["step2"]
-                    if menu_step2 == '0': #step2 '0' = 'view'
+                    if menu_step2 == '0': # step2 '0' = 'view'
                         if action == 'right':
                             menu_step2 = '1'
                         elif action == 'left':
                             menu_step1 = '0'
-                    else: #step2 '1' = 'hollow'; '2' = 'glow'; '3' = 'graph'; '4' = blocks
+                    else: # step2 '1' = 'hollow'; '2' = 'glow'; '3' = 'graph'; '4' = blocks
                         menu_step3 = data["current"]["step3"]
-                        if menu_step3 == '0': #step3 '1' = blue; '2' = red; '3' = green; '4' = cherry blossom
+                        if menu_step3 == '0': # step3 '1' = blue; '2' = red; '3' = green; '4' = cherry blossom
                             if action == 'down':
                                 if int(menu_step2) < 4:
                                     menu_step2 = str(int(menu_step2) + 1)
@@ -384,7 +378,7 @@ def Buttons():
                                 if int(menu_step3) > 1:
                                     menu_step3 = str(int(menu_step3) - 1)
                             elif action == 'select':
-                                    #write it!
+                                    # write it!
                                     vselected = 'yes'
                                     if int(menu_step1) > 0:
                                         d_write = {'view':({'top': menu_step1, 'mid': menu_step2, 'color': menu_step3})}
