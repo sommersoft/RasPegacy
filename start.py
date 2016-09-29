@@ -87,7 +87,7 @@ def SendValues(boost, boost_needle, opress, opress_needle, **cvals):
     
     # send the current status message
     if cvals["sbar_msg"]:
-        sbar_msg = 'status_bar/sbar/msg:' + result_msg
+        sbar_msg = 'status_bar/sbar/msg:' + cvals["sbar_msg"]
         send(sbar_msg)
     
     # send lower values (visible in all views)
