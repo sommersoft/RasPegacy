@@ -2,11 +2,11 @@
 Another Boring, RPi Car Data Display... Designed for use with 05-09 Subaru Legacies with OEM Navigation
 
 # Hardware System Components (as designed)
-1. Raspberry Pi A+
+1. Raspberry Pi A+ V1
 2. SeeedStudio RTC Module (DS3231)
 3. Sparkfun Barometric Pressure Breakout (BMP180)
 4. Microchip ADC (MCP3208)
-5. Honeywell PX2 Series Pressure Transducer (PX2AN1XX100PSACX)
+5. Honeywell PX2 Series Pressure Transducer (PX2AN1XX250PSACX)
 6. Adafruit 3-Axis Accelerometer Breakout (LIS3DH)
 7. ScanTool OBDLink SX (USB type OBD-II reader)
 
