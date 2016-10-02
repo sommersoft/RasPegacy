@@ -218,7 +218,7 @@ def Sense():
 
 
         # Read OBDII signals (USB)
-            cmd = (obd.commands.COOLANT_TEMP, obd.commands.MAF, obd.commands.TPS,
+            cmd = (obd.commands.COOLANT_TEMP, obd.commands.MAF, obd.commands.THROTTLE_POS,
                    obd.commands.INTAKE_PRESSURE)
             coolant, maf, tps, boost_val = obdII.query_multi(*cmd)
             '''
