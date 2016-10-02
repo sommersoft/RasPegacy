@@ -228,21 +228,21 @@ def Sense():
                 info-beamer glRotate would look like this: (-135 + 271 * 0.28) = 38.08
             '''
             #boost = random.randrange(-11, 17)
-            boost = boost_val.value.to("psi").magnitude
+            boost = "{0:.2f}".format((boost_val.value.to("psi").magnitude) - baro)
             boost_pre = (boost - (baro * -1)) / (20 - (baro * -1))
             #print "boost_pre:(", boost," - ", (baro * -1), " / 20 - ", (baro * -1), " = ", format(boost_pre, '.2f')
-            boost_needle = format(boost_pre, '.2f')
+            boost_needle = "{0:.2f}".format(boost_pre)
 
             # a/f learning 1?
 
             # coolant temp
-            cvalues["c_temp"] = coolant.value.to("degF")
+            cvalues["c_temp"] = "{0:d}F".format(coolant.value.to("degF").magnitude)
             
             # maf
-            cvalues["maf"] = maf.value
+            cvalues["maf"] = "{0:.2f}g/s".format(maf.value.magnitude)
 
             # tps
-            cvalues["tps"] = tps.value
+            cvalues["tps"] = "{0:.0%}".format(tps.value.magnitude)
 
             # what else?
             
@@ -410,4 +410,4 @@ if __name__ == "__main__":
     btns = Process(target=Buttons)
     btns.start()
     Sense()
-    result_msg = "Initializing Display & Sensor Array..."
+    cvalues["sbar_msg"] = "Initializing Display & Sensor Array..."
