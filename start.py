@@ -228,7 +228,7 @@ def Sense():
                 info-beamer glRotate would look like this: (-135 + 271 * 0.28) = 38.08
             '''
             #boost = random.randrange(-11, 17)
-            boost = boost_val.value.magnitude.to("psi")
+            boost = boost_val.value.to("psi").magnitude
             boost_pre = (boost - (baro * -1)) / (20 - (baro * -1))
             #print "boost_pre:(", boost," - ", (baro * -1), " / 20 - ", (baro * -1), " = ", format(boost_pre, '.2f')
             boost_needle = format(boost_pre, '.2f')
