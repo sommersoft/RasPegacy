@@ -236,7 +236,7 @@ def Sense():
             # a/f learning 1?
 
             # coolant temp
-            cvalues["c_temp"] = "{0:d}F".format(coolant.value.to("degF").magnitude)
+            cvalues["c_temp"] = "{0:.0f}F".format(coolant.value.to("degF").magnitude)
             
             # maf
             cvalues["maf"] = "{0:.2f}g/s".format(maf.value.magnitude)
