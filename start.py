@@ -80,15 +80,10 @@ def SendValues(boost, boost_needle, opress, opress_needle, **cvals):
     send(clockmsg)
 
     # send the interior temperature
-    if cvals["temp"]:
-        clocktemp = 'menu/clock/tmp:' + cvals["temp"]
-        clocktempf = clocktemp
-        send(clocktempf)
-    
+    if cvals["temp"]: send("menu/clock/tmp:" + str(cvals["temp"]))
+        
     # send the current status message
-    if cvals["sbar_msg"]:
-        sbar_msg = 'status_bar/sbar/msg:' + cvals["sbar_msg"]
-        send(sbar_msg)
+    if cvals["sbar_msg"]: send("status_bar/sbar/msg:" + str(cvals["sbar_msg"]))
     
     # send lower values (visible in all views)
     if cvals["c_temp"]: send("lower/set/coolant:" + str(cvals["c_temp"]))
@@ -178,9 +173,9 @@ def Sense():
         Function to listen to sensors (BMP180, MCP3208, LIS3DH, ODBII).
         Will not run threaded so that it doesn't interfere with values being sent.
     '''
-    #import obd
+    import obd
     cvalues["sbar_msg"] = "Initializing OBDII Connection..."
-    #obdII = obd.OBD()
+    obdII = obd.OBD()
     # TODO: catch obdII connect status and update result_msg
     
     try:
@@ -222,16 +217,17 @@ def Sense():
 
 
         # Read OBDII signals (USB)
-            #cmd = (obd.commands.COOLANT_TEMP, obd.commands.MAF, obd.commands.TPS,
-            #       obd.commands.BOOST)
-            #response = obdII.query_multi(*cmd)
+            cmd = (obd.commands.COOLANT_TEMP, obd.commands.MAF, obd.commands.TPS,
+                   obd.commands.INTAKE_PRESSURE)
+            coolant, maf, tps, boost_val = obdII.query_multi(*cmd)
             '''
                 BOOST
                 needle angle calculation (MIN = baro * -1, MAX = 20): P = [boost - MIN] / [MAX - MIN]
                 example: boost = -5.06, baro = 14.7 || [-5.06 - -14.7](9.64) / [20 - -14.7](34.7) = 0.277 (0.28)
                 info-beamer glRotate would look like this: (-135 + 271 * 0.28) = 38.08
             '''
-            boost = random.randrange(-11, 17)
+            #boost = random.randrange(-11, 17)
+            boost = boost_val.value.magnitude
             boost_pre = (boost - (baro * -1)) / (20 - (baro * -1))
             #print "boost_pre:(", boost," - ", (baro * -1), " / 20 - ", (baro * -1), " = ", format(boost_pre, '.2f')
             boost_needle = format(boost_pre, '.2f')
@@ -239,13 +235,13 @@ def Sense():
             # a/f learning 1?
 
             # coolant temp
-            cvalues["c_temp"] = 182
+            cvalues["c_temp"] = coolant.value.magnitude
             
             # maf
-            cvalues["maf"] = "4 g/s"
+            cvalues["maf"] = maf.value.magnitude
 
             # tps
-            cvalues["tps"] = "30%"
+            cvalues["tps"] = tps.value.magnitude
 
             # what else?
             
@@ -257,12 +253,12 @@ def Sense():
     except KeyboardInterrupt:
         btns.join()
         spi.close
-        #obdII.close
+        obdII.close
         return
     
     btns.join()
     spi.close
-    #obdII.close
+    obdII.close
     exit()
 
 def readMCP(channel):
