@@ -229,7 +229,7 @@ def Sense():
             '''
             #boost = random.randrange(-11, 17)
             boost = "{0:.2f}".format((boost_val.value.to("psi").magnitude) - baro)
-            boost_pre = (boost - (baro * -1)) / (20 - (baro * -1))
+            boost_pre = (boost_val.value.to("psi").magnitude - (baro * -1)) / (20 - (baro * -1))
             #print "boost_pre:(", boost," - ", (baro * -1), " / 20 - ", (baro * -1), " = ", format(boost_pre, '.2f')
             boost_needle = "{0:.2f}".format(boost_pre)
 
