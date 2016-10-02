@@ -68,7 +68,7 @@ def send(data):
         https://github.com/dividuum/info-beamer-nodes/30c3-room
     '''
     sock.sendto(data, ('127.0.0.1', 4444))
-    #print >>sys.stderr, "SENT >>> ", data
+    print >>sys.stderr, "SENT >>> ", data
 
 def SendValues(boost, boost_needle, opress, opress_needle, **cvals):
     '''
@@ -174,6 +174,7 @@ def Sense():
         Will not run threaded so that it doesn't interfere with values being sent.
     '''
     import obd
+    obd.logger.setLevel(obd.logging.DEBUG)
     cvalues["sbar_msg"] = "Initializing OBDII Connection..."
     obdII = obd.OBD()
     # TODO: catch obdII connect status and update result_msg
