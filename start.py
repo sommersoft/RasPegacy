@@ -68,7 +68,26 @@ def send(data):
         https://github.com/dividuum/info-beamer-nodes/30c3-room
     '''
     sock.sendto(data, ('127.0.0.1', 4444))
-    print >>sys.stderr, "SENT >>> ", data
+    #print >>sys.stderr, "SENT >>> ", data
+    
+# Setup the OBDII connection; wait for a connection
+send("status_bar/sbar/msg:" + "Initializing OBDII connection...")
+cvalues["sbar_msg"] = "Initializing OBDII connection..."
+import obd
+obd.logger.setLevel(obd.logging.DEBUG)
+obdII = obd.OBD()
+while not obdII.interface.is_connected():
+    if any(obdII.interface.status() in (OBDStatus.NOT_CONNECTED, OBDStatus.ELM_CONNECTED)):
+        send("status_bar/sbar/msg:" + "OBDII Connection Failed. Check connections, and restart RasPegacy.")
+        time.sleep(10000)
+        send("status_bar/sbar/msg:" + "RasPegacy will shutdown in 5 seconds.")
+        time.sleep(5000)
+        btns.join()
+        spi.close
+        exit()
+    else
+        continue
+send("status_bar/sbar/msg:" + "OBDII connection established. ECU protocol: " + obdII.protocol_name())
 
 def SendValues(boost, boost_needle, opress, opress_needle, **cvals):
     '''
@@ -173,12 +192,7 @@ def Sense():
         Function to listen to sensors (BMP180, MCP3208, LIS3DH, ODBII).
         Will not run threaded so that it doesn't interfere with values being sent.
     '''
-    import obd
-    obd.logger.setLevel(obd.logging.DEBUG)
-    cvalues["sbar_msg"] = "Initializing OBDII Connection..."
-    obdII = obd.OBD()
-    # TODO: catch obdII connect status and update result_msg
-    
+
     try:
         for i in range(3000):
         # Read BMP180 (i2c)
@@ -218,33 +232,43 @@ def Sense():
 
 
         # Read OBDII signals (USB)
-            cmd = (obd.commands.COOLANT_TEMP, obd.commands.MAF, obd.commands.THROTTLE_POS,
-                   obd.commands.INTAKE_PRESSURE)
-            coolant, maf, tps, boost_val = obdII.query_multi(*cmd)
-            '''
-                BOOST
-                needle angle calculation (MIN = baro * -1, MAX = 20): P = [boost - MIN] / [MAX - MIN]
-                example: boost = -5.06, baro = 14.7 || [-5.06 - -14.7](9.64) / [20 - -14.7](34.7) = 0.277 (0.28)
-                info-beamer glRotate would look like this: (-135 + 271 * 0.28) = 38.08
-            '''
-            #boost = random.randrange(-11, 17)
-            boost = "{0:.2f}".format((boost_val.value.to("psi").magnitude) - baro)
-            boost_pre = (boost_val.value.to("psi").magnitude - (baro * -1)) / (20 - (baro * -1))
-            #print "boost_pre:(", boost," - ", (baro * -1), " / 20 - ", (baro * -1), " = ", format(boost_pre, '.2f')
-            boost_needle = "{0:.2f}".format(boost_pre)
+            if obdII.is_connected():
+                if cvalues["sbar_msg"] == "OBDII connection lost...":
+                    cvalues["sbar_msg"] = "OBDII connection re-established..."
+                #elif cvalues["sbar_msg"] = "OBDII connection re-established..."
+                else
+                    cvalues["sbar_msg"] = ""
+                    
+                cmd = (obd.commands.COOLANT_TEMP, obd.commands.MAF, obd.commands.THROTTLE_POS,
+                       obd.commands.INTAKE_PRESSURE)
+                coolant, maf, tps, boost_val = obdII.query_multi(*cmd)
+                '''
+                    BOOST
+                    needle angle calculation (MIN = baro * -1, MAX = 20): P = [boost - MIN] / [MAX - MIN]
+                    example: boost = -5.06, baro = 14.7 || [-5.06 - -14.7](9.64) / [20 - -14.7](34.7) = 0.277 (0.28)
+                    info-beamer glRotate would look like this: (-135 + 271 * 0.28) = 38.08
+                '''
+                #boost = random.randrange(-11, 17)
+                boost = "{0:.2f}".format((boost_val.value.to("psi").magnitude) - baro)
+                boost_pre = (boost_val.value.to("psi").magnitude - (baro * -1)) / (20 - (baro * -1))
+                #print "boost_pre:(", boost," - ", (baro * -1), " / 20 - ", (baro * -1), " = ", format(boost_pre, '.2f')
+                boost_needle = "{0:.2f}".format(boost_pre)
 
-            # a/f learning 1?
+                # a/f learning 1?
 
-            # coolant temp
-            cvalues["c_temp"] = "{0:.0f}F".format(coolant.value.to("degF").magnitude)
-            
-            # maf
-            cvalues["maf"] = "{0:.2f}g/s".format(maf.value.magnitude)
+                # coolant temp
+                cvalues["c_temp"] = "{0:.0f}F".format(coolant.value.to("degF").magnitude)
 
-            # tps
-            cvalues["tps"] = "{0:.0%}".format(tps.value.magnitude)
+                # maf
+                cvalues["maf"] = "{0:.2f} g/s".format(maf.value.magnitude)
 
-            # what else?
+                # tps
+                cvalues["tps"] = "{0:.0g}%".format(tps.value.magnitude)
+
+                # what else?
+                
+            else
+                cvalues["sbar_msg"] = "OBDII connection lost..."
             
             
         #Send 'em!
@@ -407,7 +431,8 @@ def Buttons():
 
 ##Main script init
 if __name__ == "__main__":
+    send("status_bar/sbar/msg:" + "Initializing Display & Sensor Array...")
+    cvalues["sbar_msg"] = "Initializing Display & Sensor Array..."
     btns = Process(target=Buttons)
     btns.start()
     Sense()
-    cvalues["sbar_msg"] = "Initializing Display & Sensor Array..."
