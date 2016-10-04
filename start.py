@@ -80,8 +80,9 @@ while not obdII.interface.is_connected():
     if any(obdII.interface.status() in (OBDStatus.NOT_CONNECTED, OBDStatus.ELM_CONNECTED)):
         send("status_bar/sbar/msg:" + "OBDII Connection Failed. Check connections, and restart RasPegacy.")
         time.sleep(10000)
-        send("status_bar/sbar/msg:" + "RasPegacy will shutdown in 5 seconds.")
-        time.sleep(5000)
+        for i in range(5, 0, -1):
+            send("status_bar/sbar/msg:" + "RasPegacy will shutdown in {i} seconds.".format(i))
+            time.sleep(1000)
         btns.join()
         spi.close
         exit()
