@@ -76,18 +76,24 @@ cvalues["sbar_msg"] = "Initializing OBDII connection..."
 import obd
 obd.logger.setLevel(obd.logging.DEBUG)
 obdII = obd.OBD()
-while not obdII.interface.is_connected():
-    if any(obdII.interface.status() in (OBDStatus.NOT_CONNECTED, OBDStatus.ELM_CONNECTED)):
-        send("status_bar/sbar/msg:" + "OBDII Connection Failed. Check connections, and restart RasPegacy.")
-        time.sleep(10000)
-        for i in range(5, 0, -1):
-            send("status_bar/sbar/msg:" + "RasPegacy will shutdown in {i} seconds.".format(i))
-            time.sleep(1000)
+while not obdII.is_connected():
+    try:
+        if any(obdII.interface.status() in (OBDStatus.NOT_CONNECTED, OBDStatus.ELM_CONNECTED)):
+            send("status_bar/sbar/msg:" + "OBDII Connection Failed. Check connections, and restart RasPegacy.")
+            time.sleep(10000)
+            for i in range(5, 0, -1):
+                send("status_bar/sbar/msg:" + "RasPegacy will shutdown in {i} seconds.".format(i))
+                time.sleep(1000)
+            btns.join()
+            spi.close
+            exit()
+        else:
+            continue
+    except KeyboardInterrupt:
         btns.join()
         spi.close
-        exit()
-    else:
-        continue
+        obdII.close
+        
 send("status_bar/sbar/msg:" + "OBDII connection established. ECU protocol: " + obdII.protocol_name())
 
 def SendValues(boost, boost_needle, opress, opress_needle, **cvals):
