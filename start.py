@@ -61,7 +61,7 @@ beam = subprocess.Popen('exec nice -n -5 sudo /home/pi/info-beamer-pi/info-beame
 while True:
     a = beam.poll()
     if a == None:
-        print "info-beam polled: " + time.strftime
+        print time.strftime('info-beam polled: %H:%M')
         break
 
 def send(data):
