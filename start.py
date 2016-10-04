@@ -88,7 +88,6 @@ while not obdII.is_connected():
             for i in range(5, 0, -1):
                 send("status_bar/sbar/msg:" + "RasPegacy will shutdown in {0} seconds.".format(i))
                 time.sleep(1)
-            btns.join()
             spi.close
             beam.terminate()
             exit()
