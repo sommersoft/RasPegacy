@@ -74,9 +74,8 @@ def send(data):
     
 # Setup the OBDII connection; wait for a connection
 print time.strftime('starting OBD: %H:%M')
-send("status_bar/sbar/msg:" + "Initializing OBDII connection...")
-cvalues["sbar_msg"] = "Initializing OBDII connection..."
 import obd
+send("status_bar/sbar/msg:" + "Initializing OBDII connection...")
 obd.logger.setLevel(obd.logging.DEBUG)
 obdII = obd.OBD()
 while not obdII.is_connected():
@@ -94,9 +93,10 @@ while not obdII.is_connected():
         else:
             continue
     except KeyboardInterrupt:
-        btns.join()
         spi.close
         obdII.close
+        beam.terminate()
+        exit()
         
 send("status_bar/sbar/msg:" + "OBDII connection established. ECU protocol: " + obdII.protocol_name())
 
