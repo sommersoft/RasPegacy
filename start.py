@@ -56,12 +56,12 @@ GPIO.setup(btnRight, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 # First things first, get info-beamer running (view selected from main node)
 # http://www.info-beamer.com/pi
-print "starting info-beam: " + '{:%H:%M:%S}'.format(time.localtime)
+print time.strftime('starting info-beam: %H:%M')
 beam = subprocess.Popen('exec nice -n -5 sudo /home/pi/info-beamer-pi/info-beamer /home/pi/RasPegacy/nodes', shell=True)
 while True:
     a = beam.poll()
     if a == None:
-        print "info-beam polled: " + time.localtime
+        print "info-beam polled: " + time.strftime
         break
 
 def send(data):
@@ -73,7 +73,7 @@ def send(data):
     #print >>sys.stderr, "SENT >>> ", data
     
 # Setup the OBDII connection; wait for a connection
-print "start OBD: " + '{:%H:%M:%S}'.format(time.localtime)
+print time.strftime('starting OBD: %H:%M')
 send("status_bar/sbar/msg:" + "Initializing OBDII connection...")
 cvalues["sbar_msg"] = "Initializing OBDII connection..."
 import obd
@@ -82,7 +82,7 @@ obdII = obd.OBD()
 while not obdII.is_connected():
     try:
         if obdII.status() in ("Not Connected", "ELM Connected"):
-            print obdII.status()
+            #print obdII.status()
             send("status_bar/sbar/msg:" + "OBDII Connection Failed. Check connections, and restart RasPegacy.")
             time.sleep(10)
             for i in range(5, 0, -1):
@@ -443,7 +443,7 @@ def Buttons():
 
 ##Main script init
 if __name__ == "__main__":
-    print "main: " + '{:%H:%M:%S}'.format(time.localtime)
+    print time.strftime('main: %H:%M')
     send("status_bar/sbar/msg:" + "Initializing Display & Sensor Array...")
     cvalues["sbar_msg"] = "Initializing Display & Sensor Array..."
     btns = Process(target=Buttons)
