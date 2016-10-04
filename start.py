@@ -86,7 +86,7 @@ while not obdII.interface.is_connected():
         btns.join()
         spi.close
         exit()
-    else
+    else:
         continue
 send("status_bar/sbar/msg:" + "OBDII connection established. ECU protocol: " + obdII.protocol_name())
 
@@ -237,7 +237,7 @@ def Sense():
                 if cvalues["sbar_msg"] == "OBDII connection lost...":
                     cvalues["sbar_msg"] = "OBDII connection re-established..."
                 #elif cvalues["sbar_msg"] = "OBDII connection re-established..."
-                else
+                else:
                     cvalues["sbar_msg"] = ""
                     
                 cmd = (obd.commands.COOLANT_TEMP, obd.commands.MAF, obd.commands.THROTTLE_POS,
@@ -268,7 +268,7 @@ def Sense():
 
                 # what else?
                 
-            else
+            else:
                 cvalues["sbar_msg"] = "OBDII connection lost..."
             
             
