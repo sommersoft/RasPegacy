@@ -81,10 +81,10 @@ while not obdII.is_connected():
         if obdII.status() in ("Not Connected", "ELM Connected"):
             print obdII.status()
             send("status_bar/sbar/msg:" + "OBDII Connection Failed. Check connections, and restart RasPegacy.")
-            time.sleep(10000)
+            time.sleep(10)
             for i in range(5, 0, -1):
                 send("status_bar/sbar/msg:" + "RasPegacy will shutdown in {i} seconds.".format(i))
-                time.sleep(1000)
+                time.sleep(1)
             btns.join()
             spi.close
             beam.terminate()
