@@ -78,7 +78,8 @@ obd.logger.setLevel(obd.logging.DEBUG)
 obdII = obd.OBD()
 while not obdII.is_connected():
     try:
-        if any(obdII.status() in (OBDStatus.NOT_CONNECTED, OBDStatus.ELM_CONNECTED)):
+        if any(obdII.status() in ("Not Connected", "ELM Connected")):
+            print obdII.status()
             send("status_bar/sbar/msg:" + "OBDII Connection Failed. Check connections, and restart RasPegacy.")
             time.sleep(10000)
             for i in range(5, 0, -1):
