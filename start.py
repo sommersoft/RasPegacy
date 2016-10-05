@@ -56,12 +56,10 @@ GPIO.setup(btnRight, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 # First things first, get info-beamer running (view selected from main node)
 # http://www.info-beamer.com/pi
-print time.strftime('starting info-beam: %H:%M')
 beam = subprocess.Popen('exec nice -n -5 sudo /home/pi/info-beamer-pi/info-beamer /home/pi/RasPegacy/nodes', shell=True)
 while True:
     a = beam.poll()
     if a == None:
-        print time.strftime('info-beam polled: %H:%M')
         break
 
 def send(data):
@@ -75,9 +73,12 @@ def send(data):
 # Setup the OBDII connection; wait for a connection
 print time.strftime('starting OBD: %H:%M')
 import obd
+print time.strftime('OBD imported: %H:%M')
 send("status_bar/sbar/msg:" + "Initializing OBDII connection...")
 obd.logger.setLevel(obd.logging.DEBUG)
+print time.strftime('creating OBD object: %H:%M')
 obdII = obd.OBD()
+print time.strftime('OBD object created: %H:%M')
 while not obdII.is_connected():
     try:
         if obdII.status() in ("Not Connected", "ELM Connected"):
@@ -260,7 +261,7 @@ def Sense():
                     info-beamer glRotate would look like this: (-135 + 271 * 0.28) = 38.08
                 '''
                 #boost = random.randrange(-11, 17)
-                boost = "{0:.2f}".format((boost_val.value.to("psi").magnitude) - baro)
+                boost = "{0:-.2f}".format((boost_val.value.to("psi").magnitude) - baro)
                 boost_pre = (boost_val.value.to("psi").magnitude - (baro * -1)) / (20 - (baro * -1))
                 #print "boost_pre:(", boost," - ", (baro * -1), " / 20 - ", (baro * -1), " = ", format(boost_pre, '.2f')
                 boost_needle = "{0:.2f}".format(boost_pre)
@@ -444,7 +445,6 @@ def Buttons():
 if __name__ == "__main__":
     print time.strftime('main: %H:%M')
     send("status_bar/sbar/msg:" + "Initializing Display & Sensor Array...")
-    cvalues["sbar_msg"] = "Initializing Display & Sensor Array..."
     btns = Process(target=Buttons)
     btns.start()
     Sense()
