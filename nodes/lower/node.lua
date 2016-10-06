@@ -10,7 +10,7 @@ local font = resource.load_font("Exo2.otf")
 local cool = "--"
 local tps = "--"
 local maf = "--"
-local iat = "--"
+local intake = "--"
 local calc_load = "--"
 
 util.data_mapper{
