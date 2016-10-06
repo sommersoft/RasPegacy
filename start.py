@@ -16,7 +16,7 @@ from multiprocessing import Process
 
 # init constant value dict
 cvalues = {"c_temp": None, "maf": None, "tps": None,
-           "temp": None, "sbar_msg": None}
+           "temp": None, "sbar_msg": None, "calc_load": None, "iat": None}
 
 # Setup sock for UPD updates
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -120,6 +120,8 @@ def SendValues(boost, boost_needle, opress, opress_needle, **cvals):
     if cvals["c_temp"]: send("lower/set/coolant:" + str(cvals["c_temp"]))
     if cvals["maf"]: send("lower/set/maf:" + str(cvals["maf"]))
     if cvals["tps"]: send("lower/set/tps:" + str(cvals["tps"]))
+    if cvals["calc_load"]: send("lower/set/calc_load:" + str(cvals["calc_load"]))
+    if cvals["iat"]: send("lower/set/intake:" + str(cvals["iat"]))
 
     # check which view we're using, so we know how to "send" the data
     with open('/home/pi/RasPegacy/nodes/view.json') as data_file: #, encoding='utf-8') as data_file:
@@ -252,8 +254,9 @@ def Sense():
                     cvalues["sbar_msg"] = ""
                     
                 cmd = (obd.commands.COOLANT_TEMP, obd.commands.MAF, obd.commands.THROTTLE_POS,
-                       obd.commands.INTAKE_PRESSURE)
-                coolant, maf, tps, boost_val = obdII.query_multi(*cmd)
+                       obd.commands.INTAKE_PRESSURE, obd.commands.ENGINE_LOAD,
+                       obd.commands.INTAKE_TEMP)
+                coolant, maf, tps, boost_val, calc_load, iat = obdII.query_multi(*cmd)
                 '''
                     BOOST
                     needle angle calculation (MIN = baro * -1, MAX = 20): P = [boost - MIN] / [MAX - MIN]
@@ -266,8 +269,6 @@ def Sense():
                 #print "boost_pre:(", boost," - ", (baro * -1), " / 20 - ", (baro * -1), " = ", format(boost_pre, '.2f')
                 boost_needle = "{0:.2f}".format(boost_pre)
 
-                # a/f learning 1?
-
                 # coolant temp
                 cvalues["c_temp"] = "{0:.0f}F".format(coolant.value.to("degF").magnitude)
 
@@ -276,8 +277,12 @@ def Sense():
 
                 # tps
                 cvalues["tps"] = "{0:.0g}%".format(tps.value.magnitude)
-
-                # what else?
+                
+                # calculate load
+                cvalues["calc_load"] = "{0:.0g}%".format(calc_load.value.magnitude)
+                
+                # intake air temp
+                cvalues["iat"] = "{0:.0f}F".format(iat.value.to("degF").magnitude)
                 
             else:
                 cvalues["sbar_msg"] = "OBDII connection lost..."
@@ -443,7 +448,6 @@ def Buttons():
 
 ##Main script init
 if __name__ == "__main__":
-    print time.strftime('main: %H:%M')
     send("status_bar/sbar/msg:" + "Initializing Display & Sensor Array...")
     btns = Process(target=Buttons)
     btns.start()
