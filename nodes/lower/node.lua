@@ -24,6 +24,14 @@ util.data_mapper{
         maf = tostring(new_maf)
         --print("maf", maf)
     end;
+    ["set/intake"] = function(new_intake)
+        intake = tostring(new_intake)
+        --print("maf", maf)
+    end;
+    ["set/calc_load"] = function(new_load)
+        calc_load = tostring(new_load)
+        --print("maf", maf)
+    end;
 }
 
 function node.render()
@@ -34,9 +42,12 @@ function node.render()
     --end
 
     -- Write status message
-    font:write(300, 10, "LOWER VALUES", 24, 1, 1, 1, 1)
-    font:write(30, 30, "COOLANT TEMP: " .. cool, 20, 1, 1, 1, 1)
-    font:write(250, 30, "MAF: " .. maf, 20, 1, 1, 1, 1)
-    font:write(420, 30, "THROTTLE POS: " .. tps, 20, 1, 1, 1, 1)
+    font:write(30, 15, "COOLANT TEMP: " .. cool, 20, 1, 1, 1, 1)
+    font:write(250, 15, "MAF: " .. maf, 20, 1, 1, 1, 1)
+    font:write(420, 15, "THROTTLE POS: " .. tps, 20, 1, 1, 1, 1)
+    
+    font:write(30, 45, "INTAKE AIR TEMP: " .. intake, 20, 1, 1, 1, 1)
+    font:write(280, 45, "CALCULATED LOAD: " .. calc_load, 20, 1, 1, 1, 1)
+    
     
 end
