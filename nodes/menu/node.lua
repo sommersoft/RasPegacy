@@ -56,6 +56,6 @@ function node.render()
 
     -- Draw clock
     font:write(WIDTH - 50, 2, clk, 18, 1, 1, 1, 1)
-    font:write(WIDTH - 190, 2, 'Out: XX°  In: ' .. tmp .. '°', 18, 1, 1, 1, 1)
+    font:write(WIDTH - 190, 2, 'Inside: ' .. tmp .. '°', 18, 1, 1, 1, 1)
     
 end
