@@ -13,7 +13,7 @@ Subaru = resource.load_image("Subaru_Logo.png")
 
 local font = resource.load_font("Exo2.otf")
 
-local msg = " "
+local msg = "Initializing OBDII connection..."
 util.data_mapper{
     ["sbar/msg"] = function(new_msg)
         --print("MSG", new_msg)
